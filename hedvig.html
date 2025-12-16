@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎄 Gavesafen 🎄</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 50%, #1a472a 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Snøflak-animasjon */
+        .snowflakes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -20px;
+            color: white;
+            font-size: 1.5em;
+            animation: fall linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            border: 4px solid #c41e3a;
+        }
+
+        .safe-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            color: #1a472a;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #c41e3a;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .instruction {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .code-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .code-input {
+            width: 65px;
+            height: 75px;
+            font-size: 2.5em;
+            text-align: center;
+            border: 3px solid #1a472a;
+            border-radius: 12px;
+            background: #f8f8f8;
+            color: #1a472a;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: #c41e3a;
+            box-shadow: 0 0 15px rgba(196, 30, 58, 0.4);
+            transform: scale(1.05);
+        }
+
+        .code-input.correct {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .code-input.wrong {
+            border-color: #c62828;
+            background: #ffebee;
+            animation: shake 0.5s ease;
+        }
+
+        /* Bankboks kode-input (7 tegn) */
+        .bankbox-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .bankbox-input {
+            width: 50px;
+            height: 60px;
+            font-size: 1.8em;
+            text-align: center;
+            border: 3px solid #1a472a;
+            border-radius: 12px;
+            background: #f8f8f8;
+            color: #1a472a;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .bankbox-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            transform: scale(1.05);
+        }
+
+        .bankbox-input.correct {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .bankbox-input.wrong {
+            border-color: #c62828;
+            background: #ffebee;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(196, 30, 58, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn.gold {
+            background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+            color: #1a472a;
+        }
+
+        .submit-btn.gold:hover {
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Skjermer */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 100px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .success-title {
+            color: #2e7d32;
+            font-size: 2em;
+            margin: 20px 0;
+        }
+
+        .success-message {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .hint-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .hint-title {
+            color: #856404;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .hint-text {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .gift-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 2px solid #2e7d32;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .gift-title {
+            color: #1a472a;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .gift-text {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            color: #333;
+            line-height: 1.8;
+            border-left: 4px solid #c41e3a;
+            text-align: left;
+        }
+
+        .gift-amount {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+
+        .decorations {
+            position: absolute;
+            font-size: 30px;
+        }
+
+        .deco-1 { top: 10px; left: 15px; }
+        .deco-2 { top: 10px; right: 15px; }
+        .deco-3 { bottom: 10px; left: 15px; }
+        .deco-4 { bottom: 10px; right: 15px; }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+
+        .confetti.active {
+            display: block;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="snowflakes" id="snowflakes"></div>
+    <div class="confetti" id="confetti"></div>
+
+    <div class="container">
+        <span class="decorations deco-1">🎄</span>
+        <span class="decorations deco-2">⭐</span>
+        <span class="decorations deco-3">🎁</span>
+        <span class="decorations deco-4">🔔</span>
+
+        <!-- Steg 1: Lås-skjerm (kode 2412) -->
+        <div class="screen active" id="lockScreen">
+            <div class="safe-icon">🔐</div>
+            <h1>Gavesafen</h1>
+            <p class="subtitle">🎅 God Jul! 🎅</p>
+            <p class="instruction">Tast inn koden</p>
+
+            <div class="code-inputs">
+                <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" id="code1">
+                <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" id="code2">
+                <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" id="code3">
+                <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" id="code4">
+            </div>
+
+            <button class="submit-btn" onclick="checkSafeCode()">🔓 Åpne Safen</button>
+        </div>
+
+        <!-- Steg 2: Bankboks-skjerm (kode 99999BA - omvendt) -->
+        <div class="screen" id="bankboxScreen">
+            <div class="safe-icon">🏦</div>
+            <h2 class="success-title">Du er inne i safen!</h2>
+            <p class="success-message">
+                Gratulerer! Nå kan du hente gaven din som ligger i bankboksen.
+            </p>
+
+            <div class="hint-box">
+                <p class="hint-title">🔑 Hint:</p>
+                <p class="hint-text">Nøkkelen til bankboksen er omvendt.</p>
+            </div>
+
+            <p class="instruction">Tast inn nøkkelen til bankboksen:</p>
+
+            <div class="bankbox-inputs">
+                <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank1">
+                <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank2">
+                <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank3">
+                <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank4">
+                <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank5">
+                <input type="text" class="bankbox-input" maxlength="1" id="bank6">
+                <input type="text" class="bankbox-input" maxlength="1" id="bank7">
+            </div>
+
+            <button class="submit-btn gold" onclick="checkBankboxCode()">🔑 Åpne Bankboksen</button>
+        </div>
+
+        <!-- Steg 3: Suksess-skjerm -->
+        <div class="screen" id="successScreen">
+            <div class="success-icon">🎉</div>
+            <h2 class="success-title">GRATULERER!</h2>
+            <p class="success-message">
+                Du har åpnet bankboksen! 🎄✨
+            </p>
+
+            <div class="gift-box">
+                <p class="gift-title">🎁 Her er gaven din!</p>
+                <div class="gift-text">
+                    <p>I bankboksen ligger det et gavekort på</p>
+                    <p class="gift-amount">1500,-</p>
+                    <p style="margin-top: 10px;">som kan innløses hos <strong>Mamma</strong> 🎅</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lag snøflak
+        function createSnowflakes() {
+            const container = document.getElementById('snowflakes');
+            const snowflakeSymbols = ['❄', '❅', '❆', '✻', '✼'];
+
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                snowflake.style.animationDelay = Math.random() * 10 + 's';
+                snowflake.style.fontSize = (Math.random() * 1.5 + 0.5) + 'em';
+                snowflake.style.opacity = Math.random() * 0.6 + 0.4;
+                container.appendChild(snowflake);
+            }
+        }
+
+        // Lag konfetti
+        function createConfetti() {
+            const container = document.getElementById('confetti');
+            container.innerHTML = '';
+            container.classList.add('active');
+
+            const colors = ['#c41e3a', '#1a472a', '#ffd700', '#ff6b6b', '#4ecdc4', '#fff'];
+
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                container.appendChild(confetti);
+            }
+
+            setTimeout(() => {
+                container.classList.remove('active');
+            }, 5000);
+        }
+
+        // Bytt skjerm
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Safe kode inputs (4 siffer)
+        const safeInputs = document.querySelectorAll('.code-input');
+
+        safeInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                if (e.target.value.length === 1 && index < safeInputs.length - 1) {
+                    safeInputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    safeInputs[index - 1].focus();
+                }
+                if (e.key === 'Enter') {
+                    checkSafeCode();
+                }
+            });
+
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+                for (let i = 0; i < Math.min(pastedData.length, 4); i++) {
+                    if (safeInputs[index + i]) {
+                        safeInputs[index + i].value = pastedData[i];
+                    }
+                }
+            });
+        });
+
+        // Bankboks kode inputs (7 tegn: 99999BA - omvendt av AB99999)
+        const bankInputs = document.querySelectorAll('.bankbox-input');
+
+        bankInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                // Tillat både tall og bokstaver
+                e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+
+                if (e.target.value.length === 1 && index < bankInputs.length - 1) {
+                    bankInputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    bankInputs[index - 1].focus();
+                }
+                if (e.key === 'Enter') {
+                    checkBankboxCode();
+                }
+            });
+
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pastedData = e.clipboardData.getData('text').toUpperCase();
+                for (let i = 0; i < Math.min(pastedData.length, 7); i++) {
+                    if (bankInputs[index + i]) {
+                        bankInputs[index + i].value = pastedData[i];
+                    }
+                }
+            });
+        });
+
+        // Sjekk safe-koden (2412)
+        function checkSafeCode() {
+            const code = Array.from(safeInputs).map(input => input.value).join('');
+            const correctCode = '2412';
+
+            if (code === correctCode) {
+                safeInputs.forEach(input => input.classList.add('correct'));
+                setTimeout(() => {
+                    showScreen('bankboxScreen');
+                    bankInputs[0].focus();
+                }, 500);
+            } else {
+                safeInputs.forEach(input => {
+                    input.classList.add('wrong');
+                    setTimeout(() => {
+                        input.classList.remove('wrong');
+                        input.value = '';
+                    }, 500);
+                });
+                safeInputs[0].focus();
+            }
+        }
+
+        // Sjekk bankboks-koden (99999BA - omvendt av AB99999)
+        function checkBankboxCode() {
+            const code = Array.from(bankInputs).map(input => input.value).join('').toUpperCase();
+            const correctCode = '99999BA';
+
+            if (code === correctCode) {
+                bankInputs.forEach(input => input.classList.add('correct'));
+                setTimeout(() => {
+                    showScreen('successScreen');
+                    createConfetti();
+                }, 500);
+            } else {
+                bankInputs.forEach(input => {
+                    input.classList.add('wrong');
+                    setTimeout(() => {
+                        input.classList.remove('wrong');
+                        input.value = '';
+                    }, 500);
+                });
+                bankInputs[0].focus();
+            }
+        }
+
+        // Start snøfall
+        createSnowflakes();
+
+        // Fokuser på første input
+        document.getElementById('code1').focus();
+    </script>
+</body>
+</html>
