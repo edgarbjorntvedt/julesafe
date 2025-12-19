@@ -364,7 +364,7 @@
             <button class="submit-btn" onclick="checkSafeCode()">🔓 Åpne Safen</button>
         </div>
 
-        <!-- Steg 2: Bankboks-skjerm (kode AB99999) -->
+        <!-- Steg 2: Bankboks-skjerm (kode SV58450) -->
         <div class="screen" id="bankboxScreen">
             <div class="safe-icon">🏦</div>
             <h2 class="success-title">Du er inne i safen!</h2>
@@ -374,7 +374,7 @@
 
             <div class="hint-box">
                 <p class="hint-title">🔑 Hint:</p>
-                <p class="hint-text">Nøkkelen til bankboksen står på nummerskiltet til Onkel Eirik.</p>
+                <p class="hint-text">Nøkkelen til bankboksen står på bilskiltet til Onkel Eirik.</p>
             </div>
 
             <p class="instruction">Tast inn nøkkelen til bankboksen:</p>
@@ -404,7 +404,7 @@
                 <p class="gift-title">🎁 Her er gaven din!</p>
                 <div class="gift-text">
                     <p>I bankboksen ligger det et gavekort på</p>
-                    <p class="gift-amount">1500,-</p>
+                    <p class="gift-amount">400,-</p>
                     <p style="margin-top: 10px;">som kan innløses hos <strong>Mamma</strong> 🎅</p>
                 </div>
             </div>
@@ -546,10 +546,10 @@
             }
         }
 
-        // Sjekk bankboks-koden (AB99999)
+        // Sjekk bankboks-koden (SV58450)
         function checkBankboxCode() {
             const code = Array.from(bankInputs).map(input => input.value).join('').toUpperCase();
-            const correctCode = 'AB99999';
+            const correctCode = 'SV58450';
 
             if (code === correctCode) {
                 bankInputs.forEach(input => input.classList.add('correct'));

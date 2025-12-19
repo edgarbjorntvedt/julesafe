@@ -364,7 +364,7 @@
             <button class="submit-btn" onclick="checkSafeCode()">🔓 Åpne Safen</button>
         </div>
 
-        <!-- Steg 2: Bankboks-skjerm (kode 99999BA - omvendt) -->
+        <!-- Steg 2: Bankboks-skjerm (kode 252512) -->
         <div class="screen" id="bankboxScreen">
             <div class="safe-icon">🏦</div>
             <h2 class="success-title">Du er inne i safen!</h2>
@@ -374,7 +374,7 @@
 
             <div class="hint-box">
                 <p class="hint-title">🔑 Hint:</p>
-                <p class="hint-text">Nøkkelen til bankboksen er omvendt.</p>
+                <p class="hint-text">Nøkkelen til bankboksen husnummeret til Onkel Eirik og bursdagen til Maren</p>
             </div>
 
             <p class="instruction">Tast inn nøkkelen til bankboksen:</p>
@@ -385,8 +385,7 @@
                 <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank3">
                 <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank4">
                 <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank5">
-                <input type="text" class="bankbox-input" maxlength="1" id="bank6">
-                <input type="text" class="bankbox-input" maxlength="1" id="bank7">
+                <input type="text" class="bankbox-input" maxlength="1" inputmode="numeric" id="bank6">
             </div>
 
             <button class="submit-btn gold" onclick="checkBankboxCode()">🔑 Åpne Bankboksen</button>
@@ -404,7 +403,7 @@
                 <p class="gift-title">🎁 Her er gaven din!</p>
                 <div class="gift-text">
                     <p>I bankboksen ligger det et gavekort på</p>
-                    <p class="gift-amount">1500,-</p>
+                    <p class="gift-amount">1400,-</p>
                     <p style="margin-top: 10px;">som kan innløses hos <strong>Mamma</strong> 🎅</p>
                 </div>
             </div>
@@ -546,10 +545,10 @@
             }
         }
 
-        // Sjekk bankboks-koden (99999BA - omvendt av AB99999)
+        // Sjekk bankboks-koden (252512)
         function checkBankboxCode() {
             const code = Array.from(bankInputs).map(input => input.value).join('').toUpperCase();
-            const correctCode = '99999BA';
+            const correctCode = '252512';
 
             if (code === correctCode) {
                 bankInputs.forEach(input => input.classList.add('correct'));
